@@ -12,24 +12,27 @@ class Rack:
     def create_balls_array(self):
         if self.rack_type == "standard":
             return [
-                (1, False),
-                (1, False),
-                (1, False),
-                (1, False),
-                (2, False),
+                1, 1, 1,
+                1, 2
                 ]
         if self.rack_type == "money":
               return [
-                (2, False),
-                (2, False),
-                (2, False),
-                (2, False),
-                (2, False),
+                  2, 2, 2,
+                  2, 2
                 ]
         if self.rack_type == "deep":
-            return [
-                (3, False)
-                ]
+            return [3]
 
-    def shoot(self, make):
-        pass
+    def shoot(self, timing):
+        print(timing)
+        points = 0
+
+        if timing > 450 and timing < 600:
+            points = self.balls[self.index]
+
+        self.index += 1
+
+        if self.index >= len(self.balls):
+            self.done = True
+        print(points)
+        return points

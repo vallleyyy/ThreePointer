@@ -7,6 +7,7 @@ from shooter import Shooter
 
 START_TIMER = 3000
 MAX_SHOT_TIMER = 2000
+DELAY_TIMER = 500
 
 class Game:
     def __init__(self, length, clock):
@@ -22,6 +23,9 @@ class Game:
         self.points = 0
         self.shooting = False
         self.shot_timer = 0
+        self.key_up = True
+        self.delay_timer = DELAY_TIMER
+        self.rack_index = 0
         print("PRESS SPACE TO START")
 
     def generate_racks(self):
@@ -38,10 +42,13 @@ class Game:
     def update(self):
         time_passed = self.clock.get_time()
         pressed_keys = pygame.key.get_pressed()
+        if not pressed_keys[K_SPACE]:
+            self.key_up = True
 
         # start timer
         if not self.started and not self.active and not self.start_timer_running:
             if pressed_keys[K_SPACE]:
+                self.key_up = False
                 self.start_timer_running = True
                 print("STARTING IN 3")
 
@@ -57,31 +64,34 @@ class Game:
 
         if self.started and self.active:
             self.game_timer -= time_passed
+            self.delay_timer -= time_passed
 
             # Shooting logic HERE
-            if pressed_keys[K_SPACE] and not self.shooting:
+            if pressed_keys[K_SPACE] and not self.shooting and self.key_up and self.delay_timer <= 0:
+                self.key_up = False
                 self.shooting = True
-
 
             if self.shooting and pressed_keys[K_SPACE]:
                 self.shot_timer += time_passed
 
             if (self.shooting and not pressed_keys[K_SPACE]) or self.shot_timer > MAX_SHOT_TIMER:
-                print(self.shot_timer)
                 self.shooting = False
+
+                current_rack = self.racks[self.rack_index]
+                self.points += current_rack.shoot(self.shot_timer)
+
+                if current_rack.done:
+                    self.rack_index += 1
+
+                if self.rack_index >= len(self.racks):
+                    self.game_timer = 0
+
                 self.shot_timer = 0
+                self.delay_timer = DELAY_TIMER
 
             if self.game_timer <= 0:
                 self.active = False
                 print("Game Over")
-
-
-        # get how long space bar has been pressed down
-        # pass it into rack object
-        # if make, add points to game points
-        # iterate to next ball/rack
-        # update timer
-        pass
 
     def draw(self):
         # shooter is drawn by shooter, includes ball in all stages except make/miss
