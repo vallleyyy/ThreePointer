@@ -1,6 +1,12 @@
 import pygame
+import math
+import random
 from scipy.stats import norm
 from pygame.locals import *
+
+PERFECT_TIMING = 500
+STANDARD_DENOM = 1.5
+DEEP_DENOM = 0.5
 
 class Rack:
     def __init__(self, distance, rack_type, position): # standard distance 22, deep distance 30, positions 0-6, deep should be 2 and 4
@@ -10,6 +16,7 @@ class Rack:
         self.balls = self.create_balls_array()
         self.index = 0
         self.done = False
+        self.perfect_timing = PERFECT_TIMING
 
     def create_balls_array(self):
         if self.rack_type == "standard":
@@ -26,7 +33,6 @@ class Rack:
             return [3]
 
     def shoot(self, timing):
-        print(timing)
         points = 0
 
         if self.is_make(timing):
@@ -36,9 +42,25 @@ class Rack:
 
         if self.index >= len(self.balls):
             self.done = True
-        print(points)
         return points
     
     def is_make(self, timing):
-        return timing > 400 and timing < 600
+        make_percentage = self.timing_odds(timing)
+        luck = random.random()
+        return luck <= make_percentage
+    
+    
+    def timing_odds(self, timing):
+        if self.rack_type == "deep":
+            denominator = STANDARD_DENOM
+        else:
+            denominator = DEEP_DENOM
 
+        scaled_perfect = self.perfect_timing / 100
+        scaled_timing = timing / 100
+        numerator = (scaled_timing - scaled_perfect)**2
+        fraction = numerator / denominator
+        exponent = -1 * fraction
+        result = math.e**exponent
+        print("x =", scaled_timing, "y =", result)
+        return True
