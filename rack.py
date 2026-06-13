@@ -37,10 +37,13 @@ class Rack:
         if self.is_make(timing):
             points = self.balls[self.index]
 
+        print(timing, points, "/", self.balls[self.index])
+
         self.index += 1
 
         if self.index >= len(self.balls):
             self.done = True
+
         return points
     
     def is_make(self, timing):

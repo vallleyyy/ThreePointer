@@ -91,7 +91,7 @@ class Game:
 
             if self.game_timer <= 0:
                 self.active = False
-                print("Game Over")
+                print("Game Over:", self.points, 'points')
 
     def draw(self):
         # shooter is drawn by shooter, includes ball in all stages except make/miss
