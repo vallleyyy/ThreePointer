@@ -18,14 +18,18 @@ class App:
         self.size = self.width, self.height = width, height
         self.name = name
         self.fps = fps
-        self.clock = pygame.time.Clock()
-        self.game = Game(GAME_LENGTH, self.clock)
+        self.clock = None
+        self.game = None
+
 
     def on_init(self):
         pygame.init()
 
         self._display_surf = pygame.display.set_mode(self.size, pygame.HWSURFACE | pygame.DOUBLEBUF)
         pygame.display.set_caption(self.name)
+
+        self.clock = pygame.time.Clock()
+        self.game = Game(GAME_LENGTH, self.clock)
 
         self._running = True
 
@@ -38,7 +42,7 @@ class App:
 
     def on_render(self):
         self._display_surf.fill(WHITE)
-        self.game.draw()
+        self.game.draw(self._display_surf)
         pygame.display.update()
 
     def on_cleanup(self):

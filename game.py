@@ -1,12 +1,11 @@
 import pygame
 from pygame.locals import *
-from pynput import keyboard
 import time
 from rack import Rack
 from shooter import Shooter
 
 START_TIMER = 3000
-MAX_SHOT_TIMER = 2000
+MAX_SHOT_TIMER = 1000
 DELAY_TIMER = 500
 
 class Game:
@@ -26,6 +25,9 @@ class Game:
         self.key_up = True
         self.delay_timer = DELAY_TIMER
         self.rack_index = 0
+        self.frame = pygame.image.load("assets/frame.png").convert_alpha()
+        self.frame_rect = self.frame.get_rect()
+        self.frame_rect.center = (300, 300)
         print("PRESS SPACE TO START")
 
     def generate_racks(self):
@@ -74,6 +76,8 @@ class Game:
             if self.shooting and pressed_keys[K_SPACE]:
                 self.shot_timer += time_passed
 
+            self.shooter.update(time_passed, self.shot_timer, self.shooting)
+
             if (self.shooting and not pressed_keys[K_SPACE]) or self.shot_timer > MAX_SHOT_TIMER:
                 self.shooting = False
 
@@ -93,7 +97,11 @@ class Game:
                 self.active = False
                 print("Game Over:", self.points, 'points')
 
-    def draw(self):
+    def draw(self, surface):
+        self.shooter.draw(surface)
+        surface.blit(self.frame, self.frame_rect)
+        if not self.rack_index >= len(self.racks):
+            self.racks[self.rack_index].draw(surface)
         # shooter is drawn by shooter, includes ball in all stages except make/miss
         # rack is drawn by rack
         # game checks rack position for camera angle

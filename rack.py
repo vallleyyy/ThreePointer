@@ -16,6 +16,7 @@ class Rack:
         self.index = 0
         self.done = False
         self.perfect_timing = PERFECT_TIMING
+        self.images = self.create_images()
 
     def create_balls_array(self):
         if self.rack_type == "standard":
@@ -64,3 +65,27 @@ class Rack:
         fraction = numerator / denominator
         exponent = -1 * fraction
         return math.e**exponent
+
+    def create_images(self):
+        image_list = []
+        counter = 0
+        for ball in self.balls:
+            if ball == 3:
+                img = pygame.image.load("assets/deep_ball.png").convert_alpha()
+            elif ball == 2:
+                img = pygame.image.load("assets/money_ball.png").convert_alpha()
+            else:
+                img = pygame.image.load("assets/standard_ball.png").convert_alpha()
+            x = 300 + (39 * counter)
+            counter += 1
+            rect = img.get_rect()
+            rect.center = (x, 300)
+
+            tup = (img, rect)
+            image_list.append(tup)
+        return image_list
+
+    def draw(self, surface):
+        for i in range(self.index, len(self.images)):
+            tup = self.images[i]
+            surface.blit(tup[0], tup[1])
