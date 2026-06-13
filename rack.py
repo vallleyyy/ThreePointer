@@ -1,10 +1,12 @@
 import pygame
+from scipy.stats import norm
 from pygame.locals import *
 
 class Rack:
     def __init__(self, distance, rack_type, position): # standard distance 22, deep distance 30, positions 0-6, deep should be 2 and 4
         self.distance = distance
         self.rack_type = rack_type
+        self.position = position
         self.balls = self.create_balls_array()
         self.index = 0
         self.done = False
@@ -27,7 +29,7 @@ class Rack:
         print(timing)
         points = 0
 
-        if timing > 450 and timing < 600:
+        if self.is_make(timing):
             points = self.balls[self.index]
 
         self.index += 1
@@ -36,3 +38,7 @@ class Rack:
             self.done = True
         print(points)
         return points
+    
+    def is_make(self, timing):
+        return timing > 400 and timing < 600
+
