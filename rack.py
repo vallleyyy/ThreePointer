@@ -61,6 +61,4 @@ class Rack:
         numerator = (scaled_timing - scaled_perfect)**2
         fraction = numerator / denominator
         exponent = -1 * fraction
-        result = math.e**exponent
-        print("x =", scaled_timing, "y =", result)
-        return True
+        return math.e**exponent
