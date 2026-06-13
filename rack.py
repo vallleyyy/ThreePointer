@@ -9,8 +9,7 @@ STANDARD_DENOM = 1.5
 DEEP_DENOM = 0.5
 
 class Rack:
-    def __init__(self, distance, rack_type, position): # standard distance 22, deep distance 30, positions 0-6, deep should be 2 and 4
-        self.distance = distance
+    def __init__(self, rack_type, position):
         self.rack_type = rack_type
         self.position = position
         self.balls = self.create_balls_array()

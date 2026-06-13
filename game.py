@@ -30,13 +30,13 @@ class Game:
 
     def generate_racks(self):
         racks = []
-        racks.append(Rack(22, "standard", 0))
-        racks.append(Rack(22, "standard", 1))
-        racks.append(Rack(22, "deep", 2))
-        racks.append(Rack(22, "standard", 3))
-        racks.append(Rack(22, "deep", 4))
-        racks.append(Rack(22, "standard", 5))
-        racks.append(Rack(22, "money", 6))
+        racks.append(Rack("standard", 0))
+        racks.append(Rack("standard", 1))
+        racks.append(Rack("deep", 2))
+        racks.append(Rack("standard", 3))
+        racks.append(Rack("deep", 4))
+        racks.append(Rack("standard", 5))
+        racks.append(Rack("money", 6))
         return racks
 
     def update(self):
