@@ -2,8 +2,8 @@ import pygame
 from pygame.locals import *
 from app import App
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 800
+SCREEN_WIDTH = 400
+SCREEN_HEIGHT = 400
 FPS = 30
 NAME = "Three Point Contest"
 
