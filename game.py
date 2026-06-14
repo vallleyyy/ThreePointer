@@ -7,6 +7,11 @@ from shooter import Shooter
 START_TIMER = 3000
 MAX_SHOT_TIMER = 1000
 DELAY_TIMER = 500
+RED = (219, 59, 50)
+TIMER_SIZE = 48
+TIMER_POSITION = (271, 20)
+SCORE_SIZE = 56
+SCORE_POSITION = (50, 542)
 
 class Game:
     def __init__(self, length, clock):
@@ -28,6 +33,8 @@ class Game:
         self.frame = pygame.image.load("assets/frame.png").convert_alpha()
         self.frame_rect = self.frame.get_rect()
         self.frame_rect.center = (300, 300)
+        self.timer_font = pygame.font.Font("assets/fonts/LCD.tff", TIMER_SIZE)
+        self.score_font = pygame.font.Font("assets/fonts/LCD.tff", SCORE_SIZE)
         print("PRESS SPACE TO START")
 
     def generate_racks(self):
@@ -102,6 +109,14 @@ class Game:
         surface.blit(self.frame, self.frame_rect)
         if not self.rack_index >= len(self.racks):
             self.racks[self.rack_index].draw(surface)
+
+        rounded_timer = f"{round(self.game_timer / 1000):02d}"
+        timer = self.timer_font.render(rounded_timer, 1, RED)
+        surface.blit(timer, TIMER_POSITION)
+
+        formatted_score = f"{self.points:02d}"
+        score = self.score_font.render(formatted_score, 1, RED)
+        surface.blit(score, SCORE_POSITION)
         # shooter is drawn by shooter, includes ball in all stages except make/miss
         # rack is drawn by rack
         # game checks rack position for camera angle
