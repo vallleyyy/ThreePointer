@@ -110,7 +110,11 @@ class Game:
         if not self.rack_index >= len(self.racks):
             self.racks[self.rack_index].draw(surface)
 
-        rounded_timer = f"{round(self.game_timer / 1000):02d}"
+        if not self.started:
+            rounded_timer = f"{round(self.start_timer / 1000):02d}"
+        else:
+            rounded_timer = f"{round(self.game_timer / 1000):02d}"
+
         timer = self.timer_font.render(rounded_timer, 1, RED)
         surface.blit(timer, TIMER_POSITION)
 
