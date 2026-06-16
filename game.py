@@ -108,7 +108,7 @@ class Game:
                 self.shot_timer += time_passed
 
             self.shooter.update(time_passed, self.shot_timer, self.shooting)
-            self.update_timing_bar(time_passed, self.shot_timer, self.shooting)
+            self.update_timing_bar(time_passed)
 
             if (self.shooting and not pressed_keys[K_SPACE]) or self.shot_timer > MAX_SHOT_TIMER:
                 self.shooting = False
