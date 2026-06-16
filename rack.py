@@ -4,18 +4,17 @@ import random
 from scipy.stats import norm
 from pygame.locals import *
 
-PERFECT_TIMING = 500
 STANDARD_DENOM = 1.5
 DEEP_DENOM = 0.5
 
 class Rack:
-    def __init__(self, rack_type, position):
+    def __init__(self, rack_type, position, perfect_timing):
         self.rack_type = rack_type
         self.position = position
         self.balls = self.create_balls_array()
         self.index = 0
         self.done = False
-        self.perfect_timing = PERFECT_TIMING
+        self.perfect_timing = perfect_timing
         self.images = self.create_images()
 
     def create_balls_array(self):

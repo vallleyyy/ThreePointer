@@ -29,7 +29,7 @@ class App:
         pygame.display.set_caption(self.name)
 
         self.clock = pygame.time.Clock()
-        self.game = Game(GAME_LENGTH, self.clock)
+        self.game = Game(GAME_LENGTH, self.clock, self.fps)
 
         self._running = True
 
