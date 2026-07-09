@@ -11,11 +11,17 @@ PERFECT_TIMING = 500
 
 RED = (219, 59, 50)
 
+GAME_OVER_TIMER = 500
+
 TIMER_SIZE = 48
 TIMER_POSITION = (271, 20)
 
 SCORE_SIZE = 56
 SCORE_POSITION = (50, 542)
+
+START_SIZE = 32
+START_POSITION = (76, 480)
+
 
 METER_PERFECT_SIZING = 160
 METER_MAX_SIZING = 204
@@ -26,10 +32,13 @@ class Game:
         self.clock = clock
         self.fps = fps
 
+        self.show_start_text = False
+
         self.game_timer = length
         self.start_timer = START_TIMER
         self.delay_timer = DELAY_TIMER
         self.shot_timer = 0
+        self.game_over_timer = GAME_OVER_TIMER
 
         self.start_timer_running = False
         self.active = False
@@ -39,9 +48,13 @@ class Game:
 
         self.rack_index = 0
         self.racks = self.generate_racks()
-        self.shooter = Shooter("Rickea", "2", "Sparks")
+        self.shooter = Shooter("Plum", "2", "Sparks")
 
         self.points = 0
+
+        self.background = pygame.image.load("assets/background.png").convert_alpha()
+        self.background_rect = self.background.get_rect()
+        self.background_rect.center = (300, 300)
 
         self.frame = pygame.image.load("assets/frame.png").convert_alpha()
         self.frame_rect = self.frame.get_rect()
@@ -58,8 +71,28 @@ class Game:
 
         self.timer_font = pygame.font.Font("assets/fonts/LCD.tff", TIMER_SIZE)
         self.score_font = pygame.font.Font("assets/fonts/LCD.tff", SCORE_SIZE)
+        self.start_font = pygame.font.Font("assets/fonts/LCD.tff", START_SIZE)
 
         print("PRESS SPACE TO START")
+
+    def restart(self):
+        self.game_timer = self.length
+        self.start_timer = START_TIMER
+        self.delay_timer = DELAY_TIMER
+        self.shot_timer = 0
+        self.points = 0
+        self.game_over_timer = GAME_OVER_TIMER
+
+        self.start_timer_running = False
+        self.active = False
+        self.shooting = False
+        self.started = False
+        self.key_up = True
+
+        self.rack_index = 0
+        self.racks = self.generate_racks()
+        self.shooter = Shooter("Plum", "2", "Sparks")
+
 
     def generate_racks(self):
         racks = []
@@ -80,7 +113,9 @@ class Game:
 
         # start timer
         if not self.started and not self.active and not self.start_timer_running:
+            self.show_start_text = True
             if pressed_keys[K_SPACE]:
+                self.show_start_text = False
                 self.key_up = False
                 self.start_timer_running = True
                 print("STARTING IN 3")
@@ -128,6 +163,14 @@ class Game:
             if self.game_timer <= 0:
                 self.active = False
                 print("Game Over:", self.points, 'points')
+                print("Press Space to restart")
+
+        if self.started and not self.active:
+            self.game_over_timer -= time_passed
+            if self.game_over_timer <= 0:
+                self.show_start_text = True
+            if pressed_keys[K_SPACE] and self.key_up and self.game_over_timer <= 0:
+                self.restart()
 
     def update_timing_bar(self, time_passed):
         seconds_per_frame = 1000 / self.fps
@@ -152,8 +195,8 @@ class Game:
 
 
     def draw(self, surface):
+        surface.blit(self.background, self.background_rect)
         self.shooter.draw(surface)
-
         surface.blit(self.frame, self.frame_rect)
         surface.blit(self.meter_frame, self.meter_frame_rect)
         surface.blit(self.meter_background, self.meter_background_rect)
@@ -173,5 +216,10 @@ class Game:
         formatted_score = f"{self.points:02d}"
         score = self.score_font.render(formatted_score, 1, RED)
         surface.blit(score, SCORE_POSITION)
+
+        if self.show_start_text:
+            start_text = "Press \"Space\" to Start"
+            start = self.start_font.render(start_text, 1, RED, (0, 0, 0))
+            surface.blit(start, START_POSITION)
 
 
